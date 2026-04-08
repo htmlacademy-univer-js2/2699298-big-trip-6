@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Карина Габдуллина](https://up.htmlacademy.ru/univer-js2/6/user/2699298).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр Сударев`.
 
 ---
 
@@ -50,3 +50,5 @@ git clone SSH-адрес_вашего_форка
 
 [check-image]: https://github.com/htmlacademy-ecmascript/2699298-big-trip-6/workflows/Project%20check/badge.svg?branch=master
 [check-url]: https://github.com/htmlacademy-ecmascript/2699298-big-trip-6/actions
+
+## Наставник: Александр Сударев
