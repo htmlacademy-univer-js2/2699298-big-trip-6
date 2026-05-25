@@ -1,37 +1,62 @@
-export default class FilterModel {
-  #filters = null;
+import { getAllEventPoints } from '../mock/event-point.js';
+import { UpdateType } from '../const.js';
+
+export default class EventsModel {
+  #events = [];
+  #observers = [];
 
   constructor() {
-    this.#filters = [
-      { id: 'everything', name: 'Everything', disabled: false },
-      { id: 'future', name: 'Future', disabled: false },
-      { id: 'present', name: 'Present', disabled: false },
-      { id: 'past', name: 'Past', disabled: false }
-    ];
+    this.#init();
   }
 
-  getFilters() {
-    return this.#filters;
+  #init() {
+    this.#events = getAllEventPoints();
   }
 
-  updateFilters(events) {
-    const now = new Date();
+  getEvents() {
+    return this.#events;
+  }
 
-    const hasFuture = events.some((event) => new Date(event.dateFrom) > now);
-    const hasPresent = events.some((event) => {
-      const start = new Date(event.dateFrom);
-      const end = new Date(event.dateTo);
-      return start <= now && end >= now;
-    });
-    const hasPast = events.some((event) => new Date(event.dateTo) < now);
+  getEventById(id) {
+    return this.#events.find((event) => event.id === id) || null;
+  }
 
-    this.#filters = [
-      { id: 'everything', name: 'Everything', disabled: false },
-      { id: 'future', name: 'Future', disabled: !hasFuture },
-      { id: 'present', name: 'Present', disabled: !hasPresent },
-      { id: 'past', name: 'Past', disabled: !hasPast }
-    ];
+  getAllFullEvents() {
+    return [...this.#events];
+  }
 
-    return this.#filters;
+  addEvent(event) {
+    const newEvent = {
+      ...event,
+      id: event.id || `event-${Date.now()}`
+    };
+    this.#events = [newEvent, ...this.#events];
+    this.#notify(UpdateType.MINOR);
+    return newEvent;
+  }
+
+  updateEvent(updatedEvent) {
+    const index = this.#events.findIndex((event) => event.id === updatedEvent.id);
+    if (index !== -1) {
+      this.#events[index] = { ...this.#events[index], ...updatedEvent };
+      this.#notify(UpdateType.MINOR);
+    }
+  }
+
+  deleteEvent(eventId) {
+    this.#events = this.#events.filter((event) => event.id !== eventId);
+    this.#notify(UpdateType.MINOR);
+  }
+
+  addObserver(observer) {
+    this.#observers.push(observer);
+  }
+
+  removeObserver(observer) {
+    this.#observers = this.#observers.filter((obs) => obs !== observer);
+  }
+
+  #notify(updateType) {
+    this.#observers.forEach((observer) => observer(updateType));
   }
 }
