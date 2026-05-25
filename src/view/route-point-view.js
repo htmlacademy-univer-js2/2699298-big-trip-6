@@ -1,10 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 function createPointTemplate(point, destination, offers) {
-  if (!point) {
-    return '';
-  }
-
   const { type, dateFrom, dateTo, basePrice, isFavorite } = point;
   const destinationName = destination ? destination.name : '';
 
@@ -105,15 +101,10 @@ export default class RoutePointView extends AbstractView {
     this.#onRollupClick = onRollupClick;
     this.#onFavoriteClick = onFavoriteClick;
 
-    const rollupBtn = this.element.querySelector('.event__rollup-btn');
-    if (rollupBtn) {
-      rollupBtn.addEventListener('click', this.#rollupClickHandler);
-    }
-
-    const favoriteBtn = this.element.querySelector('.event__favorite-btn');
-    if (favoriteBtn) {
-      favoriteBtn.addEventListener('click', this.#favoriteClickHandler);
-    }
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#rollupClickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
